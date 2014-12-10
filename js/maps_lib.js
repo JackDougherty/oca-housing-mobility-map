@@ -28,11 +28,16 @@ var MapsLib = {
   //NOTE: numeric IDs will be depricated soon
   fusionTableId:      "1qk9z46VakTMrA7zLpt8y4SfQos3FGsWhRTrww1yZ", //Point data layer
   
-  polygon1TableID:    "1ulLjrVynDtTiIypTFK333HmC7xvJmm707rgMSgyD", //Census 2000 tracts with Opportunity report 2009 scores
+  polygon1TableID:    "1USNX8O7rNhgTRY6EvrXQsXRFR2b0m_E9nsC_EXDo",
+  // original: "1ulLjrVynDtTiIypTFK333HmC7xvJmm707rgMSgyD"
+  // new: "1USNX8O7rNhgTRY6EvrXQsXRFR2b0m_E9nsC_EXDo", //Census 2000 tracts with Opportunity report 2009 scores
   
   //*MODIFY Fusion Tables Requirement* API key. found at https://code.google.com/apis/console/
   //*Important* this key is for demonstration purposes. please register your own.
-  googleApiKey:       "AIzaSyD2GkcdWBycLlHLPDnUgo_uiNIHvqku29w",
+  googleApiKey:      "AIzaSyBDvl7J6zznzoaTU0cDDBsJYk2cOgVe8nQ", 
+  // "AIzaSyBDvl7J6zznzoaTU0cDDBsJYk2cOgVe8nQ",
+  // original:  "AIzaSyD2GkcdWBycLlHLPDnUgo_uiNIHvqku29w"
+  // new: "AIzaSyBDvl7J6zznzoaTU0cDDBsJYk2cOgVe8nQ"
 
   //MODIFY name of the location column in your Fusion Table.
   //NOTE: if your location column name has spaces in it, surround it with single quotes
@@ -40,15 +45,23 @@ var MapsLib = {
   //if your Fusion Table has two-column lat/lng data, see https://support.google.com/fusiontables/answer/175922
   locationColumn:     "Lat",
 
-  map_centroid:       new google.maps.LatLng(41.7682,-72.684), //center that your map defaults to
+  map_centroid:       new google.maps.LatLng(41.613817,-72.723780), //center that your map defaults to
   locationScope:      "connecticut",      //geographical area appended to all address searches
   recordName:         "result",       //for showing number of results
   recordNamePlural:   "results",
 
   searchRadius:       805,            //in meters ~ 1/2 mile
-  defaultZoom:        10,             //zoom level when map is loaded (bigger is more zoomed in)
+  defaultZoom:        9,             //zoom level when map is loaded (bigger is more zoomed in)
   addrMarkerImage:    'images/blue-pushpin.png',
   currentPinpoint:    null,
+  
+  dirCoords1: 		  "", // DIRECTIONS API 
+  dirCoords2:		  "",
+  directionsService:  new google.maps.DirectionsService(),
+  directionsDisplay:  new google.maps.DirectionsRenderer(),
+  
+  kmlLayer:           new google.maps.KmlLayer({ url: 'http://magic.lib.uconn.edu/test/n/kml/DotDens250.kmz', preserveViewport: true }), // Dot Density KML
+														// 'http://magic.lib.uconn.edu/test/n/kml/DotDens50.kmz'
 
   initialize: function() {
     $( "#result_count" ).html("");
@@ -69,7 +82,10 @@ var MapsLib = {
     };
     map = new google.maps.Map($("#map_canvas")[0],myOptions);
 
-    // maintains map centerpoint for responsive design
+	
+	
+	// maintains map centerpoint for responsive design
+	
     google.maps.event.addDomListener(map, 'idle', function() {
         MapsLib.calculateCenter();
     });
@@ -77,6 +93,9 @@ var MapsLib = {
     google.maps.event.addDomListener(window, 'resize', function() {
         map.setCenter(MapsLib.map_centroid);
     });
+	
+	MapsLib.directionsDisplay.setMap(map); // DIRECTIONS API 
+	
 
     MapsLib.searchrecords = null;
 
@@ -92,6 +111,7 @@ var MapsLib = {
 
     //reset filters
     $("#search_address").val(MapsLib.convertToPlainString($.address.parameter('address')));
+	$("#search_address2").val(MapsLib.convertToPlainString($.address.parameter('address')));
     var loadRadius = MapsLib.convertToPlainString($.address.parameter('radius'));
     if (loadRadius != "") $("#search_radius").val(loadRadius);
     else $("#search_radius").val(MapsLib.searchRadius);
@@ -99,38 +119,82 @@ var MapsLib = {
     $("#result_box").hide();
     
     //-----custom initializers -- default setting to display Polygon1 layer
+	
+	//$("#kmlLayer").attr("checked", "checked"); // KML
     
     $("#rbPolygon1").attr("checked", "checked"); 
+	
+	
     
     //-----end of custom initializers-------
 
     //run the default search
     MapsLib.doSearch();
   },
+  
+  getDirections: function() { // DIRECTIONS API 
+	if (MapsLib.dirCoords1 && MapsLib.dirCoords2) {	
+	  var start = MapsLib.dirCoords1;
+	  var end = MapsLib.dirCoords2;
+	  var request = {
+		  origin:start,
+		  destination:end,
+		  travelMode: google.maps.TravelMode.TRANSIT
+	  };
+	  MapsLib.directionsService.route(request, function(response, status) {
+		if (status == google.maps.DirectionsStatus.OK) {
+			MapsLib.directionsDisplay.setDirections(response);
+		  
+			var myRoute = response.routes[0].legs[0];
+			$("#dir_test_box").append("Public transport time: "+myRoute.duration.text+" ("+myRoute.distance.text+")");
+			$("#dir_result_box").fadeIn();
+		}
+	  });
+	}
+  },
+  
+  displayKML: function() { // Display KML Dot Density Layer
+		MapsLib.kmlLayer.setMap(map);
+	},
+  hideKML: function() { // Hide KML Dot Density Layer
+		MapsLib.kmlLayer.setMap(null);
+	},
 
+
+  
   doSearch: function(location) {
     MapsLib.clearSearch();
+	
+	// KML
+	if ($("#kmlLayer").is(':checked')) {	
+      MapsLib.displayKML();
+    } else {
+	  MapsLib.hideKML();
+	}
 
     // MODIFY if needed: shows background polygon layer depending on which checkbox is selected
     if ($("#rbPolygon1").is(':checked')) {
       MapsLib.polygon1.setMap(map);
     }
+	
+	
     
     var address = $("#search_address").val();
+	var address2 = $("#search_address2").val();
+	
     MapsLib.searchRadius = $("#search_radius").val();
 
     var whereClause = MapsLib.locationColumn + " not equal to ''";
 
   //-----custom filters for point data layer
-
-
+  
     //-- NUMERICAL OPTION - to display and filter a column of numerical data in your table, use this instead
         var type_column = "'TypeNum'";
     var searchType = type_column + " IN (-1,";
     if ( $("#cbType1").is(':checked')) searchType += "1,";
     if ( $("#cbType2").is(':checked')) searchType += "2,";
     if ( $("#cbType3").is(':checked')) searchType += "3,";
-    if ( $("#cbType3").is(':checked')) searchType += "4,";
+    if ( $("#cbType4").is(':checked')) searchType += "4,";
     whereClause += " AND " + searchType.slice(0, searchType.length - 1) + ")";
     //-------end of custom filters--------
 
@@ -141,7 +205,12 @@ var MapsLib = {
       geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           MapsLib.currentPinpoint = results[0].geometry.location;
+		  
+		  
+		  MapsLib.dirCoords1 = MapsLib.currentPinpoint.toUrlValue(); // DIRECTIONS API 
+		  MapsLib.getDirections();
 
+		  
           $.address.parameter('address', encodeURIComponent(address));
           $.address.parameter('radius', encodeURIComponent(MapsLib.searchRadius));
           map.setCenter(MapsLib.currentPinpoint);
@@ -165,6 +234,7 @@ var MapsLib = {
         }
       });
     }
+	
     else { //search without geocoding callback
       MapsLib.submitSearch(whereClause, map);
     }
@@ -187,6 +257,12 @@ var MapsLib = {
     });
     MapsLib.searchrecords.setMap(map);
     MapsLib.getCount(whereClause);
+	
+		
+	google.maps.event.addListener(MapsLib.searchrecords, 'click', function(event) { // DIRECTIONS API 
+		MapsLib.dirCoords2 = event.latLng.toUrlValue();
+		MapsLib.getDirections();
+	});
   },
   // MODIFY if you change the number of Polygon layers
   clearSearch: function() {
