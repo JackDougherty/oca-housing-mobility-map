@@ -11,7 +11,9 @@ http://jackdougherty.github.io/oca-housing-mobility-map/index.html
 TO DO:
 - if possible, display transportation options between new address and 2nd address (work, school, etc.) and integrate Google Directions API as another map layer. See Google Routes sample code (https://github.com/JackDougherty/Google_Routes) and live demo (http://jackdougherty.github.io/Google_Routes/) See also NON-FUNCTIONAL MOCKUP for desired placement of 2nd address (http://jackdougherty.github.io/oca-housing-mobility-map/index-2-addresses.html)
 - Erin to decide about Places of Worship data
-- Erin/Jack to modify initial appearance (which looks a bit cluttered) by selecting layers/points to display by default, modifying polygon color and saturation levels, and by deciding whether to keep existing shading legend (http://magic.lib.uconn.edu/test/n/images/oppIndex_legend.png, which is a static image that cannot be modified), or to switch the template to a dynamic coded shading (similar to http://jackdougherty.github.io/FusionTable-Map-polygons-legend/iframe_test.html)
+- Erin/Jack to discuss whether or not she wishes the end product to appear as an iframe inside another web page, and if so, switch to Derek Eder's new iframe template (https://github.com/JackDougherty/FusionTable-Map-polygons-legend#fusiontable-map-polygons-legend)
+- Erin/Jack to modify initial appearance (which looks a bit cluttered) by selecting layers/points to display by default
+- Erin/Jack to decide whether to keep existing shading legend (http://magic.lib.uconn.edu/test/n/images/oppIndex_legend.png) which is a static image that cannot be modified, or to switch the template to a dynamic coded shading (similar to http://jackdougherty.github.io/FusionTable-Map-polygons-legend/iframe_test.html). In either case, modify polygon colors and saturation levels to match.
 - Erin/Jack to add explanatory text and links to source data (preferably point to Google Fusion Tables for public download)
 - Erin/Jack to explore options for embedding tool within her website
 
