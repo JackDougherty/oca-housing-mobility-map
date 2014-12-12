@@ -14,7 +14,7 @@ TO DO:
 - Erin/Jack to add explanatory text and links to source data (preferably point to Google Fusion Tables for public download)
 
 ## Opportunity and Race Map
-http://jackdougherty.github.io/oca-housing-mobility-map/index_minorityMap2.html
+http://jackdougherty.github.io/oca-housing-mobility-map/index_minorityMap.html
 
 TO DO:
 - if possible, display town labels on this interactive map. Natalia says not possible to do so as a separate KML layer
