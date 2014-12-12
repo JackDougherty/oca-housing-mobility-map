@@ -59,14 +59,23 @@
               </label>
             </p>
         <!--MODIFY Polygon layers legend heading, labels (such as Polygon layer 1) to match your data, and related variables in maps_lib.js file -->
-            <h4>
+             Minority Dot Density Map
+            </h4>
+              <label class='checkbox inline'>
+                  <input type='checkbox' id='kmlLayer' /> <!--KML Dot Density --> 
+                  One Dot equals 50 people
+              </label>
+			
+			<h4>
               Census tracts
             </h4>
               <label class='checkbox inline'>
-                  <input type='radio' name='types' class='hidden' id='rbPolygon1' checked /> <!--hides Polygon1 label -->
+                  <input type='checkbox' name='types'  id='rbPolygon1' checked /> <!--hides Polygon1 label --> <!--removed class='hidden'; replaced type='radio' to 'checkbox' -NV -->
                   Higher opportunity = darker shading
               </label>
             <!--MODIFY Point layer legend heading, labels (such as Interdistrict), and colors (green, blue, yellow, red, purple) to match your data -->
+            <h4>
+           
             <h4>
               Neighborhood assets
             </h4>
@@ -110,7 +119,8 @@
               Reset
             </a>
           </div>
-          <div class='alert alert-info' id='result_box' ><strong id='result_count'></strong></div>
+          <div class='alert alert-info' id='result_box' ><strong id='result_count'></strong></div>  
+		  <div class='alert alert-info' id='dir_result_box' style='display:none'><strong id='dir_test_box'></strong></div> <!-- DIRECTIONS API -->
         </div>
         <div class='col-md-8'>
           <noscript>
