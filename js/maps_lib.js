@@ -116,7 +116,7 @@ var MapsLib = {
     if (loadRadius != "") $("#search_radius").val(loadRadius);
     else $("#search_radius").val(MapsLib.searchRadius);
     //$(":checkbox").prop("checked", "checked");
-    $(":checkbox").not("#kmlLayer").prop("checked", "checked");
+    // $(":checkbox").not("#kmlLayer").prop("checked", "checked");
     $("#result_box").hide();
     
     //-----custom initializers -- default setting to display Polygon1 layer
