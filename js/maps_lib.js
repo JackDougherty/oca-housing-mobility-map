@@ -124,7 +124,7 @@ var MapsLib = {
 	//$("#kmlLayer").attr("checked", "checked"); // KML
     
     $("#rbPolygon1").attr("checked", "checked"); 
-    $("#cbType1").attr("autocomplete", "off");
+    $(":checkbox").attr("autocomplete", "off");
 	
 	
     
