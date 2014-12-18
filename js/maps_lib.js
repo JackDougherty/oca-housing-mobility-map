@@ -115,8 +115,6 @@ var MapsLib = {
     var loadRadius = MapsLib.convertToPlainString($.address.parameter('radius'));
     if (loadRadius != "") $("#search_radius").val(loadRadius);
     else $("#search_radius").val(MapsLib.searchRadius);
-    //$(":checkbox").prop("checked", "checked");
-    // $(":checkbox").not("#kmlLayer").prop("checked", "checked");
     $("#result_box").hide();
     
     //-----custom initializers -- default setting to display Polygon1 layer
@@ -124,7 +122,9 @@ var MapsLib = {
 	//$("#kmlLayer").attr("checked", "checked"); // KML
     
     $("#rbPolygon1").attr("checked", "checked"); 
-    $(":checkbox").attr("autocomplete", "off");
+    // $(":checkbox").attr("autocomplete", "off");   //all checkboxes off by default
+    //$(":checkbox").prop("checked", "checked");	//all checkboxes on by default
+    // $(":checkbox").not("#kmlLayer").prop("checked", "checked");	// all checkboxes except #kmlLayer on by default
 	
 	
     
